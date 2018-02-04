@@ -10,7 +10,7 @@ public class FloodFill {
     private int height;
     private int width;
     private int target;
-    private int[] tolerance = {40,40,40};
+    private int[] tolerance = {80,80,80};
 
 
 
@@ -36,7 +36,7 @@ public class FloodFill {
             return;
         }
         queue.add(new Point(x, y));
-
+        //while some element is in the queue
         while (!queue.isEmpty()){
             Point p = queue.remove();
             // debug for out of bounds
