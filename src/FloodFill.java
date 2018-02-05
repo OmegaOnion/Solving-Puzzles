@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -11,20 +12,22 @@ public class FloodFill {
     // background colour RGB
     private int target;
     // tolerance range for each pixels value for R,G,B
-    private int[] tolerance = {80,80,80};
+    private int[] tolerance = {60,60,60};
     // array of coloured pixels
     private boolean[][] marked;
     // array of not coloured pixels
-    private int[][] piece;
+    private boolean[][] piece;
 
 
     // sets some global variables
     public void floodFill(BufferedImage image, Point node, Color targetColor, Color replacementColor) {
         width = image.getWidth();
         height = image.getHeight();
-        target = targetColor.getRGB();
+       // target = targetColor.getRGB();
+        targetColor = getColor(image, 0,0);
 
         marked = new boolean[width][height];
+        piece = new boolean[width][height];
 
         // main functionality
         fillArea(image,(int)node.getX(),(int)node.getY(), targetColor, replacementColor);
@@ -32,8 +35,8 @@ public class FloodFill {
         Color pieceColor = Color.BLUE;
         // fills piece
         fillPiece(image, pieceColor);
-
-
+        edgePiece(image, Color.PINK);
+        // TODO array where (piece[x][y] == true && marked[x][y] == false)
 
     }
 
@@ -88,9 +91,16 @@ public class FloodFill {
                 if (p.y < (height -1)) {
                     queue.add(new Point(p.x, p.y + 1));
                 }
+            } else {
+                piece[p.x][p.y] = true;
             }
         }
     } // end fill area
+
+    private Color getColor(BufferedImage image, int x, int y){
+        Color c = new Color(image.getRGB(x,y));
+        return c;
+    }
 
     private void fillPiece(BufferedImage image, Color fill){
         for (int i = 0; i < width; i++){ // x loop
@@ -100,7 +110,18 @@ public class FloodFill {
                 }
             }
 
+        }
     }
-}
+
+    private void edgePiece(BufferedImage image, Color fill){
+        for (int i = 0; i < width; i++){ // x loop
+            for (int j = 0; j < height; j++){ // y loop
+                if (piece[i][j] == false){
+                    image.setRGB(i,j,fill.getRGB());
+                }
+            }
+
+        }
+    }
 
 }
