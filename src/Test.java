@@ -13,6 +13,11 @@ public class Test {
     }
 
     public static void main(String[] args) throws IOException {
-        new Test();
+       // new Test();
+        BufferedImage image = ImageIO.read(new File("real piece.png"));
+        GUI a = new GUI(image);
+
+        //a.create();
+
     }
 }
