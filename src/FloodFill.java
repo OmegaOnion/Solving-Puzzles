@@ -1,6 +1,11 @@
+import com.sun.javafx.image.BytePixelSetter;
+
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.Buffer;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -20,7 +25,7 @@ public class FloodFill {
 
 
     // sets some global variables
-    public void floodFill(BufferedImage image, Point node, Color targetColor, Color replacementColor) {
+    public void floodFill(BufferedImage image, Point node, Color targetColor, Color replacementColor) throws IOException {
         width = image.getWidth();
         height = image.getHeight();
        // target = targetColor.getRGB();
@@ -36,7 +41,10 @@ public class FloodFill {
         // fills piece
         fillPiece(image, pieceColor);
         edgePiece(image, Color.PINK);
-        // TODO array where (piece[x][y] == true && marked[x][y] == false)
+
+        boolean[][] edges = inverseIntersection(image);
+
+        outEdge(edges);
 
     }
 
@@ -73,9 +81,9 @@ public class FloodFill {
             //if (image.getRGB(p.x,p.y) == original.getRGB()){
 
                 image.setRGB(p.x,p.y, fill.getRGB());
-                // TODO MARK PIXELS - COLOURED
+                // background pixels = true
                 marked[p.x][p.y] = true;
-                // TODO MARK UNMARKED PIXELS
+
 
 
                 // queue adjacent pixels for checking
@@ -124,4 +132,40 @@ public class FloodFill {
         }
     }
 
+    public boolean[][] inverseIntersection(BufferedImage image) {
+
+        boolean[][] edges = new boolean[image.getWidth()][image.getHeight()];
+
+        for (int i = 0; i < width; i++) { // x loop
+            for (int j = 0; j < height; j++) { // y loop
+                //array where (piece[x][y] == true && marked[x][y] == false)
+                if (piece[i][j] == true && marked[i][j] == false){
+                    edges[i][j] = true;
+                }
+
+            }
+        }
+        return edges;
+    }
+
+    public void outEdge( boolean[][] edges) throws IOException {
+
+        BufferedImage newImage = new BufferedImage(width,height,8);
+
+        for (int i = 0; i < width; i++){ // x loop
+            for (int j = 0; j < height; j++){ // y loop
+                if (edges[i][j] == true){
+                    newImage.setRGB(i,j,Color.RED.getRGB());
+                } else {
+                    newImage.setRGB(i,j,Color.WHITE.getRGB());
+                }
+
+            }
+
+        }
+
+
+
+        ImageIO.write(newImage, "png", new File("edge.png"));
+    }
 }
