@@ -25,7 +25,7 @@ public class FloodFill {
 
 
     // sets some global variables
-    public void floodFill(BufferedImage image, Point node, Color targetColor, Color replacementColor) throws IOException {
+    public boolean[][] floodFill(BufferedImage image, Point node, Color targetColor, Color replacementColor) throws IOException {
         width = image.getWidth();
         height = image.getHeight();
        // target = targetColor.getRGB();
@@ -45,7 +45,7 @@ public class FloodFill {
         boolean[][] edges = inverseIntersection(image);
 
         outEdge(edges);
-
+        return edges;
     }
 
     // Queue implementation flood fill
@@ -164,8 +164,12 @@ public class FloodFill {
 
         }
 
-
-
         ImageIO.write(newImage, "png", new File("edge.png"));
     }
+
+
+
+
+
+
 }
