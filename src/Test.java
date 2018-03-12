@@ -9,9 +9,10 @@ public class Test {
     public Test() throws IOException {
 
 
-        BufferedImage image = ImageIO.read(new File("DabEmoji.jpg"));
+        BufferedImage image = ImageIO.read(new File("circle.png"));
         boolean[][] points = new FloodFill().floodFill(image, new Point(1, 1), Color.WHITE, Color.RED);
         ImageIO.write(image, "png", new File("output.png"));
+        PieceDetection p = new PieceDetection(points, image);
     }
 
     public static void main(String[] args) throws IOException {

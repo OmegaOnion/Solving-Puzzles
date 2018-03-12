@@ -17,7 +17,7 @@ public class FloodFill {
     // background colour RGB
     private int target;
     // tolerance range for each pixels value for R,G,B
-    private int[] tolerance = {60,60,60};
+    private int[] tolerance = {50,50,50};
     // array of coloured pixels
     private boolean[][] marked;
     // array of not coloured pixels
