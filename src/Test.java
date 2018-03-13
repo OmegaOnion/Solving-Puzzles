@@ -9,10 +9,11 @@ public class Test {
     public Test() throws IOException {
 
 
-        BufferedImage image = ImageIO.read(new File("circle.png"));
+        BufferedImage image = ImageIO.read(new File("test pieces.jpg"));
         boolean[][] points = new FloodFill().floodFill(image, new Point(1, 1), Color.WHITE, Color.RED);
         ImageIO.write(image, "png", new File("output.png"));
-        PieceDetection p = new PieceDetection(points, image);
+       // PieceDetection p = new PieceDetection(points, image);
+        Contours c = new Contours(points);
     }
 
     public static void main(String[] args) throws IOException {
