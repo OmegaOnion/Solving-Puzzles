@@ -1,22 +1,21 @@
 import java.awt.*;
-import java.util.LinkedList;
+import java.util.*;
 
-/**
- * Created by Sam on 05/02/2018.
- */
 public class Piece {
     // TODO create array of all pixels
     Point[] border;
     // TODO create (linked list?) of chain of edge
-    public Piece(){
+    Queue<Point> points;
 
+    public Piece(Queue<Point> queue) {
+        this.points = queue;
     }
 
-
-    public void setBorder(Point[] border){
-        this.border = border;
+    public Queue<Point> getPoints() {
+        return points;
     }
-    public Point[] getBorder(){
-        return this.border;
+
+    public void setPoints(Queue<Point> points) {
+        this.points = points;
     }
 }
