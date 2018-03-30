@@ -21,10 +21,12 @@ public class Contours {
         int[][] edges = boolToInt(boolEdge);
         // updates foreground pixels to incremented label numbers for each piece in the image
         edges = findPieces(edges);
-        // adds pieces to objects and queue
-        createPieces();
+
         // prints image label.png for visual representation of pieces
         outEdge(edges);
+
+        // adds pieces to objects and queue
+        createPieces();
 
     }
 
@@ -32,10 +34,14 @@ public class Contours {
      * Creates Piece objects from the Queues of points
      */
     public void createPieces(){
-        for(Queue<Point> p : puzzlesList){
-            Piece newPiece = new Piece(p);
-            this.pieceList.add(newPiece);
+        ArrayList<Piece> pList = new ArrayList<>();
+
+        for (int i = 0; i < this.puzzlesList.size(); i++){
+            Piece newPiece = new Piece(this.puzzlesList.get(i));
+            pList.add(newPiece);
         }
+        this. pieceList = pList;
+
     }
 
     /**
