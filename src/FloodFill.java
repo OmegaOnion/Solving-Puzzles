@@ -1,4 +1,3 @@
-import com.sun.javafx.image.BytePixelSetter;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
