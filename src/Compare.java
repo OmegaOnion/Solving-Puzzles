@@ -41,7 +41,7 @@ public class Compare {
         for (int i = 0; i < a.getPoints().size(); i++){ // a loop
             for (int j = 0; j < b.getPoints().size(); j++){ // b loop
                 // compare at current points
-
+                System.out.println(i + " " + j);
                comparePoints(i, j, aPoints, bPoints);
             } // end b loop
         } // end a loop
@@ -91,7 +91,7 @@ public class Compare {
         }
         //  DEBUG SHOW POSITIONS
         //System.out.println("pointer = " + aPoint + " length = " + length + " point a = " + aMid + " + 1 = " + ap1 + " + 2 = " + ap2 + " - 1 = " + am1 + " - 2 = " + am2);
-
+        findGradient(aMid, ap1,ap2, am1, am2);
 
         // find gradient of these points
         // if all points lie along gradient then score = 0 (straight edge)
@@ -147,8 +147,8 @@ public class Compare {
     public void findGradient(Point mid, Point mp1, Point mp2, Point mm1, Point mm2){
         // given 5 points mid +-2
         // find the gradient
-        double xChange = mp1.getX() + mm1.getX();
-        double yChange = mp1.getY() + mm1.getY();
+        double xChange = mp2.getX() - mm2.getX();
+        double yChange = mp2.getY() - mm2.getY();
 
         double grad = yChange/xChange;
 
@@ -156,6 +156,12 @@ public class Compare {
         double newX;
         double newY;
 
+
+        if (Double.isInfinite(grad)){
+            // score 0
+        } else if (grad == 0){
+            // score 0
+        }
 
         // Note: Gradient is opposite to in real world, y axis is inverted
         // grad is positive (looks like \)
@@ -167,13 +173,19 @@ public class Compare {
         }
         // X value is increasing
         if (mp1.getX() >  mm1.getX()){
-            newX = mp1.getX() + (xChange/2);
+
         // X value decreasing
         } else {
 
         }
 
-        //middle.setLocation(); // must be doubles
+        newX = mp2.getX() + (xChange/2);
+
+        newY = mp2.getY() + (yChange/2);
+
+        middle.setLocation(newX, newY); // must be doubles
+        //System.out.println(mid);
+        System.out.println(mm2 + " " + mp2 + " " + middle + " " + grad);
 
 
     }
