@@ -6,11 +6,14 @@ import java.util.Queue;
 public class Compare {
 
     ArrayList<Piece> pieces;
+    int score = 1;
 
     public Compare(ArrayList<Piece> p){ // should take arraylist
 
         setPieces(p);
         // for all pieces in arraylist
+        // compareTwoPieces();
+
 
         // get 2 pieces
         // compare all points
@@ -41,8 +44,9 @@ public class Compare {
         for (int i = 0; i < a.getPoints().size(); i++){ // a loop
             for (int j = 0; j < b.getPoints().size(); j++){ // b loop
                 // compare at current points
-                System.out.println(i + " " + j);
-               comparePoints(i, j, aPoints, bPoints);
+               // System.out.println(i + " " + j);
+                this.score = 1;
+                comparePoints(i, j, aPoints, bPoints);
             } // end b loop
         } // end a loop
 
@@ -50,6 +54,121 @@ public class Compare {
     }
 
     public void comparePoints(int aPoint, int bPoint, Point[] a, Point[] b){
+
+
+        double aNormal = computePoint(aPoint,a);
+        double bNormal = computePoint(bPoint,b);
+
+        if (this.score == 0){
+            return;
+        }
+
+        // rotate and translate entire Piece
+        double radians = findRotation(aNormal, bNormal);
+        double xTranslation = b[bPoint].getX() - a[aPoint].getX();
+        double yTranslation = b[bPoint].getY() - a[aPoint].getY();
+
+        Point[] rotated = new Point[a.length];
+        // overlays 2 points
+        for (int i = 0; i < a.length; i++){
+            rotated[i] = rotatePoint(a[i],a[aPoint],radians);
+            rotated[i].setLocation(rotated[i].getX() + xTranslation,rotated[i].getY() +yTranslation);
+           // System.out.println(i);
+        }
+
+        Boolean match = false;
+        if (rotated[aPoint].getX() == (double)b[bPoint].getX() && rotated[aPoint].getY() == (double)b[bPoint].getY() ){
+            match = true;
+        }
+        if (match== false){
+            System.out.println(match);
+        }
+
+
+
+        // compare neighbouring pixel positions
+        // give small tolerance range
+        // score = number of points until nolonger in same position
+        int score;
+
+        //return score;
+    }
+
+    /**
+     * rotates a point around a given center at a given angle in radians
+     * @param point
+     * @param center
+     * @param angle
+     * @return
+     */
+    public Point rotatePoint(Point point, Point center, double angle){
+        double x1 = point.x - center.x;
+        double y1 = point.y - center.y;
+
+        double x2 = x1 * Math.cos(angle) - y1 * Math.sin(angle);
+        double y2 = x1 * Math.sin(angle) + y1 * Math.cos(angle);
+
+        double newX = x2 + center.x;
+        double newY = y2 + center.y;
+
+        Point newPoint = new Point();
+        newPoint.setLocation(newX,newY);
+
+        return newPoint;
+    }
+
+    /**
+     * finds the difference in angles to be rotated
+     * @param aGrad
+     * @param bGrad
+     * @return
+     */
+    public double findRotation(double aGrad, double bGrad){
+
+        double gradRate = bGrad/aGrad;
+
+        //tan x = m
+        // for negative
+        // tan(180-x) = m
+
+        // x = tan-1(m)
+        double aAngle;
+        double bAngle;
+
+        aAngle = Math.toDegrees(Math.atan(aGrad));
+        bAngle = Math.toDegrees(Math.atan(bGrad));
+
+        if (aGrad < 0){
+            aAngle = 180 - aAngle;
+        }
+
+        if (bGrad < 0){
+            bAngle = 180 - aAngle;
+        }
+
+
+        //System.out.println("A Gradient = " + aGrad + "A Angle = " +  aAngle);
+       // System.out.println("B Gradient = " + bGrad + "B Angle = " +  bAngle);
+
+
+
+        double degrees = bAngle - aAngle; //  to rotation angle
+
+        // convert to radians
+        double radians = degrees * (Math.PI/180);
+
+        return radians;
+    }
+
+
+    /**
+     * prepares data to find normal
+     * @param aPoint
+     * @param a
+     * @return
+     */
+    public double computePoint(int aPoint, Point[] a){
+
         int length = a.length;
         // Chosen Point a
         Point aMid = a[aPoint];
@@ -58,15 +177,15 @@ public class Compare {
         // Find a - 1 and a - 2
         Point am1 = aMid;
         Point am2 = aMid;
-        // if point is at position 0 in the array then previous points will be at the ebd
+        // if point is at position 0 in the array then previous points will be at the end
         if (aPoint < 1){
             am1 = a[length-1];
             am2 = a[length-2];
-        // if point is at position 1 in the array then 1 previous point will be at the end
+            // if point is at position 1 in the array then 1 previous point will be at the end
         } else if (aPoint < 2){
             am1 = a[aPoint - 1];
             am2 = a[length - 1];
-        // standard condition
+            // standard condition
         } else{
             am1 = a[aPoint - 1];
             am2 = a[aPoint - 2];
@@ -80,40 +199,62 @@ public class Compare {
         if (aPoint == (length-1)){
             ap1 = a[0];
             ap2 = a[1];
-        // if point is 1 from the end in the array then 1 of the next positions will be at the start
+            // if point is 1 from the end in the array then 1 of the next positions will be at the start
         } else if (aPoint == (length-2)){
             ap1 = a[aPoint + 1];
             ap2 = a[0];
-        // standard condition
+            // standard condition
         } else{
             ap1 = a[aPoint + 1];
             ap2 = a[aPoint + 2];
         }
         //  DEBUG SHOW POSITIONS
         //System.out.println("pointer = " + aPoint + " length = " + length + " point a = " + aMid + " + 1 = " + ap1 + " + 2 = " + ap2 + " - 1 = " + am1 + " - 2 = " + am2);
-        findGradient(aMid, ap1,ap2, am1, am2);
+        double grad = findGradient(ap2,am2);
 
-        // find gradient of these points
-        // if all points lie along gradient then score = 0 (straight edge)
-        int xDif; // = a.getX - point -2.get X
-        //double fact xdif / gradient
-        double gradFactor; // multiplication of gradient to get to point point
-        //
-        // if a.getY  =  point - 2.getY + gradient factor
-        // find normal angle to the chosen point a
-        // rotate and translate entire Piece
-        int rotation;
-        int xTranslation;
-        int yTranslaton;
+        if (Double.isInfinite(grad)){
+            this.score = 0;
+        } else if (grad == 0){
+            this.score = 0;
+        }
+        // find normal from mid point to chosen point
+        double normal = findNormal(aMid,ap2, am2);
 
-        // overlay 2 points
-        // compare neighbouring pixel positions
-        // give small tolerance range
-        // score = number of points until nolonger in same position
-        int score;
+        return normal;
 
-        //return score;
     }
+
+    /**
+     * finds the normal from the midway between the overall line and the chosen point
+     * @param mid
+     * @param mp2
+     * @param mm2
+     * @return
+     */
+    public double findNormal(Point mid, Point mp2, Point mm2){
+
+        double xChange = mp2.getX() - mm2.getX();
+        double yChange = mp2.getY() - mm2.getY();
+
+        Point middle =  new Point();
+        double newX;
+        double newY;
+
+        newX = mp2.getX() + (xChange/2);
+        newY = mp2.getY() + (yChange/2);
+
+        middle.setLocation(newX, newY); // must be doubles
+        // DEBUG
+        //System.out.println(mid);
+        //System.out.println(mm2 + " " + mp2 + " " + middle + " " + grad);
+
+
+        // gradient of the normal
+        double grad = findGradient(mid,middle);
+        return grad;
+    }
+
+
 
     /**
      * converts a queue of points to an array for comparisons
@@ -137,14 +278,11 @@ public class Compare {
     }
 
     /**
-     * TODO: class description
-     * @param mid middle chosen point
-     * @param mp1 mid+1
+     * finds gradient between points
      * @param mp2 mid+2
-     * @param mm1 mid-1
      * @param mm2 mid-2
      */
-    public void findGradient(Point mid, Point mp1, Point mp2, Point mm1, Point mm2){
+    public double findGradient(Point mp2, Point mm2){
         // given 5 points mid +-2
         // find the gradient
         double xChange = mp2.getX() - mm2.getX();
@@ -152,40 +290,7 @@ public class Compare {
 
         double grad = yChange/xChange;
 
-        Point middle =  new Point();
-        double newX;
-        double newY;
-
-
-        if (Double.isInfinite(grad)){
-            // score 0
-        } else if (grad == 0){
-            // score 0
-        }
-
-        // Note: Gradient is opposite to in real world, y axis is inverted
-        // grad is positive (looks like \)
-        if (grad > 0){
-
-        // grad is negative (looks like /)
-        } else {
-
-        }
-        // X value is increasing
-        if (mp1.getX() >  mm1.getX()){
-
-        // X value decreasing
-        } else {
-
-        }
-
-        newX = mp2.getX() + (xChange/2);
-
-        newY = mp2.getY() + (yChange/2);
-
-        middle.setLocation(newX, newY); // must be doubles
-        //System.out.println(mid);
-        System.out.println(mm2 + " " + mp2 + " " + middle + " " + grad);
+        return grad;
 
 
     }
