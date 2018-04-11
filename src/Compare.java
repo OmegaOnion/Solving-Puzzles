@@ -5,8 +5,8 @@ import java.util.Queue;
 
 public class Compare {
 
-    ArrayList<Piece> pieces;
-    int score = 1;
+    private ArrayList<Piece> pieces;
+    private int score = 1;
 
     public Compare(ArrayList<Piece> p){ // should take arraylist
 
@@ -63,11 +63,12 @@ public class Compare {
         } // end a loop
 
         System.out.println("Best score: " + maxScore + " at point A: " + bestA + " at pointB: " + bestB);
-        Point[] temp = queueToArray(a.getPoints());
-        bestAPoint = temp[bestA];
-        temp = queueToArray(b.getPoints());
-        bestBPoint = temp[bestB];
+        Point[] tempA = queueToArray(a.getPoints());
+        bestAPoint = tempA[bestA];
+        Point[] tempB = queueToArray(b.getPoints());
+        bestBPoint = tempB[bestB];
         System.out.println("A Point = " + bestAPoint + " B Point = " + bestBPoint);
+        System.out.println(tempA[bestA-1] + " " + tempA[bestA+1]);
 
         // Generate score
     }
@@ -94,7 +95,7 @@ public class Compare {
             return 0;
         }
 
-        int[] TOLERANCE = {2,2};
+        int[] TOLERANCE = {3,3};
 
 
         // rotate and translate entire Piece
@@ -153,8 +154,11 @@ public class Compare {
          //       rotated[aPointer].getY() < ((double)b[bPointer].getY() + TOLERANCE[1]) &&
          //       rotated[aPointer].getY() > ((double)b[bPointer].getY() - TOLERANCE[1])){
 
-        while(rotated[aPointer].getX() == (double) b[bPointer].getX() &&
-                     rotated[aPointer].getY() == (double) b[bPointer].getY() ){
+        while(rotated[aPointer].getX() < ((double)b[bPointer].getX() + TOLERANCE[0]) &&
+                        rotated[aPointer].getX() > ((double)b[bPointer].getX() - TOLERANCE[0]) &&
+
+                       rotated[aPointer].getY() < ((double)b[bPointer].getY() + TOLERANCE[1]) &&
+                      rotated[aPointer].getY() > ((double)b[bPointer].getY() - TOLERANCE[1])){
             score++;
            // System.out.println("--");
             if (aPointer == 0){
@@ -185,8 +189,11 @@ public class Compare {
         }
 
         // points after
-       while(rotated[aPointer].getX() == (double) b[bPointer].getX() &&
-                      rotated[aPointer].getY() == (double) b[bPointer].getY() ){
+       while(rotated[aPointer].getX() < ((double)b[bPointer].getX() + TOLERANCE[0]) &&
+                        rotated[aPointer].getX() > ((double)b[bPointer].getX() - TOLERANCE[0]) &&
+
+                      rotated[aPointer].getY() < ((double)b[bPointer].getY() + TOLERANCE[1]) &&
+                       rotated[aPointer].getY() > ((double)b[bPointer].getY() - TOLERANCE[1])){
             //System.out.println("++");
             score++;
             if (aPointer == rotated.length -1){
@@ -206,7 +213,7 @@ public class Compare {
 
         // score = number of points until nolonger in same position
 
-
+        System.out.println(score);
         return score;
     }
 
@@ -248,8 +255,8 @@ public class Compare {
         // tan(180-x) = m
 
         // x = tan-1(m)
-        double aAngle = 1;
-        double bAngle = 1;
+        double aAngle;
+        double bAngle;
 
         aAngle = Math.toDegrees(Math.atan(aGrad));
         bAngle = Math.toDegrees(Math.atan(bGrad));
@@ -263,14 +270,15 @@ public class Compare {
         }
 
 
-        //System.out.println("A Gradient = " + aGrad + "A Angle = " +  aAngle);
-      //  System.out.println("B Gradient = " + bGrad + "B Angle = " +  bAngle);
+        System.out.println("A Gradient = " + aGrad + "A Angle = " +  aAngle);
+        System.out.println("B Gradient = " + bGrad + "B Angle = " +  bAngle);
 
 
 
         double degrees = bAngle - aAngle; //  to rotation angle
+        // 180 degrees rotation to "flip" so that pieces are not directly ontop
         degrees+=180;
-
+        System.out.println(degrees);
         // convert to radians
         double radians = degrees * (Math.PI/180);
 
@@ -332,14 +340,30 @@ public class Compare {
 
         double grad = findGradient(ap2,am2);
 
+        double xChange = ap1.getX() - am1.getX();
+        double yChange = ap1.getY() - am1.getY();
+
+        if (am1.getX() + (xChange/2) == a[aPoint].getX() && am1.getY() + (yChange/2) == a[aPoint].getY()){
+            this.score = 0;
+        }
+
+        if (ap1.getX() + (xChange/2) == a[aPoint].getX() && ap1.getY() - (yChange/2) == a[aPoint].getY()){
+            this.score = 0;
+        }
+
 
         if (Double.isInfinite(grad)){
             this.score = 0;
            //System.out.println(grad);
         } else if (grad == 0){
-            this.score = 0;
+            //this.score = 0;
            // System.out.println(grad);
+        } else if (grad == 1 || grad == -1){
+            this.score = 0;
+        }else {
+            //System.out.println(grad);
         }
+
 
         // find normal from mid point to chosen point
         double normal = findNormal(aMid,ap2, am2);
@@ -411,6 +435,7 @@ public class Compare {
         // find the gradient
         double xChange = mp2.getX() - mm2.getX();
         double yChange = mp2.getY() - mm2.getY();
+
 
         double grad = yChange/xChange;
 
