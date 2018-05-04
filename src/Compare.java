@@ -1,6 +1,7 @@
 import javax.annotation.processing.SupportedSourceVersion;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -12,21 +13,9 @@ public class Compare {
     public Compare(ArrayList<Piece> p){ // should take arraylist
 
         setPieces(p);
-        // for all pieces in arraylist
-        // compareTwoPieces();
-
-
-        // get 2 pieces
-        // compare all points
-        // dont compare straight edges
-        // take samples both sides of point
-        // if point lies on a straight of these give score 0
-        // otherwise determine the normal to find rotation
-        // store highest score and points that gave the score
-        // do for all piece pairs
-        // create table of best matches
 
       int length = p.size();
+      int[][] scoreTable = new int[length][length];
       //System.out.print(length);
       int score;
         // for all pieces (-1 as final piece already compared to others)
@@ -37,13 +26,21 @@ public class Compare {
                     System.out.print("p" + k + ": ");
                     score = compareTwoPieces(p.get(i), p.get(k));
                     System.out.print(score + " ");
-
+                    scoreTable[i][k] = score;
+                    scoreTable[k][i] = score;
                 }
 
             }
             System.out.println();
         }
 
+        for (int  i = 0; i < scoreTable.length; i ++){
+            System.out.print("Piece " + i + ":");
+            for (int j = 0; j < scoreTable[i].length; j++){
+                System.out.print(" p" + j + ": " + scoreTable[i][j]);
+            }
+            System.out.println();
+        }
 
     }
 
@@ -120,7 +117,7 @@ public class Compare {
             return 0;
         }
 
-        int[] TOLERANCE = {3,3};
+        int[] TOLERANCE = {5,5};
 
 
 

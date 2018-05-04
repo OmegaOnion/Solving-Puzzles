@@ -12,6 +12,7 @@ public class Contours {
     public int maxLabel;
     public ArrayList<Queue<Point>> puzzlesList;
     public ArrayList<Piece> pieceList;
+    public int[][] edges;
 
     /**
      * Sets variables and executes code
@@ -26,7 +27,7 @@ public class Contours {
         int[][] edges = boolToInt(boolEdge);
         // updates foreground pixels to incremented label numbers for each piece in the image
         edges = findPieces(edges);
-
+        this.edges = edges;
         // prints image label.png for visual representation of pieces
         outEdge(edges);
 
@@ -157,51 +158,56 @@ public class Contours {
 
         // starting position
         edges[x][y] = label;
+        if (x>0 && y>0 && x<edges.length ){
+            if (y < edges[x].length-1){
+                // first check 4 cardinal directions
 
-        // first check 4 cardinal directions
+                // North
+                if (edges[x][y - 1] == 1){
+                    // recursive call
+                    floodFill2(edges, x, (y-1), label, count + 1, q);
+                }
+                // South
+                if (edges[x][y+1] == 1){
+                    // recursive call
+                    floodFill2(edges, x, (y+1), label, count + 1, q);
+                }
+                // East
+                if (edges[x+1][y] == 1){
+                    // recursive call
+                    floodFill2(edges, (x+1), y, label, count + 1, q);
+                }
+                // West
+                if (edges[x-1][y] == 1){
+                    // recursive call
+                    floodFill2(edges, (x-1), y, label, count + 1, q);
+                }
+                // then check 4 diagonal directions
 
-        // North
-        if (edges[x][y - 1] == 1){
-            // recursive call
-            floodFill2(edges, x, (y-1), label, count + 1, q);
-        }
-        // South
-        if (edges[x][y+1] == 1){
-            // recursive call
-            floodFill2(edges, x, (y+1), label, count + 1, q);
-        }
-        // East
-        if (edges[x+1][y] == 1){
-            // recursive call
-            floodFill2(edges, (x+1), y, label, count + 1, q);
-        }
-        // West
-        if (edges[x-1][y] == 1){
-            // recursive call
-            floodFill2(edges, (x-1), y, label, count + 1, q);
-        }
-        // then check 4 diagonal directions
+                // North East
+                if (edges[x+1][y-1] == 1){
+                    // recursive call
+                    floodFill2(edges, (x+1), (y-1), label, count + 1, q);
+                }
+                // South East
+                if (edges[x+1][y+1] == 1){
+                    // recursive call
+                    floodFill2(edges, (x+1), (y+1), label, count + 1, q);
+                }
+                // South West
+                if (edges[x-1][y+1] == 1){
+                    // recursive call
+                    floodFill2(edges, (x-1), (y+1), label, count + 1, q);
+                }
+                // North West
+                if (edges[x-1][y-1] == 1){
+                    // recursive call
+                    floodFill2(edges, (x-1), (y-1), label, count + 1, q);
+                }
+            }
 
-        // North East
-        if (edges[x+1][y-1] == 1){
-            // recursive call
-            floodFill2(edges, (x+1), (y-1), label, count + 1, q);
         }
-        // South East
-        if (edges[x+1][y+1] == 1){
-            // recursive call
-            floodFill2(edges, (x+1), (y+1), label, count + 1, q);
-        }
-        // South West
-        if (edges[x-1][y+1] == 1){
-            // recursive call
-            floodFill2(edges, (x-1), (y+1), label, count + 1, q);
-        }
-        // North West
-        if (edges[x-1][y-1] == 1){
-            // recursive call
-            floodFill2(edges, (x-1), (y-1), label, count + 1, q);
-        }
+
         // add to queue of edge pixels within a contour
         q.add(new Point(x,y));
         // DEBUG shows positions as they are added to view any jumps

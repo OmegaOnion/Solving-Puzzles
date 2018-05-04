@@ -16,7 +16,7 @@ public class FloodFill {
     // background colour RGB
     private int target;
     // tolerance range for each pixels value for R,G,B
-    private int[] tolerance = {50,50,50};
+    private int[] tolerance = {85,85,85};
     // array of coloured pixels
     private boolean[][] marked;
     // array of not coloured pixels
@@ -120,6 +120,11 @@ public class FloodFill {
         }
     }
 
+    /**
+     *
+     * @param image
+     * @param fill
+     */
     private void edgePiece(BufferedImage image, Color fill){
         for (int i = 0; i < width; i++){ // x loop
             for (int j = 0; j < height; j++){ // y loop
@@ -131,6 +136,11 @@ public class FloodFill {
         }
     }
 
+    /**
+     * finds the areas where piece is true and marked is false to find then edge data
+     * @param image
+     * @return
+     */
     public boolean[][] inverseIntersection(BufferedImage image) {
 
         boolean[][] edges = new boolean[image.getWidth()][image.getHeight()];
@@ -147,6 +157,11 @@ public class FloodFill {
         return edges;
     }
 
+    /**
+     * Creates to visualisation of the data
+     * @param edges 2d array of foreground and background pixels
+     * @throws IOException
+     */
     public void outEdge( boolean[][] edges) throws IOException {
 
         BufferedImage newImage = new BufferedImage(width,height,8);
