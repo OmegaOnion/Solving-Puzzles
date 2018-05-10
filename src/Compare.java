@@ -119,7 +119,7 @@ public class Compare {
             return 0;
         }
 
-        int[] TOLERANCE = {5,5};
+        int[] TOLERANCE = {3,3};
         //int[] TOLERANCE = {5,5};
 
 
