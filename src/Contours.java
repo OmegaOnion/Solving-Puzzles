@@ -158,7 +158,8 @@ public class Contours {
 
         // starting position
         edges[x][y] = label;
-        if (x>0 && y>0 && x<edges.length ){
+        // avoid edge data
+        if (x>0 && y>0 && x<edges.length-1 ){
             if (y < edges[x].length-1){
                 // first check 4 cardinal directions
 
@@ -280,3 +281,4 @@ public class Contours {
     }
 
 }
+

@@ -23,7 +23,15 @@ public class FloodFill {
     private boolean[][] piece;
 
 
-    // sets some global variables
+    /**
+     * Sets variables and executes functions to generate visualisation data.
+     * @param image
+     * @param node
+     * @param targetColor
+     * @param replacementColor
+     * @return
+     * @throws IOException
+     */
     public boolean[][] floodFill(BufferedImage image, Point node, Color targetColor, Color replacementColor) throws IOException {
         width = image.getWidth();
         height = image.getHeight();
@@ -47,7 +55,14 @@ public class FloodFill {
         return edges;
     }
 
-    // Queue implementation flood fill
+    /**
+     * Queue based floodfill implementation
+     * @param image
+     * @param x
+     * @param y
+     * @param original
+     * @param fill
+     */
     private void fillArea (BufferedImage image, int x, int y, Color original, Color fill){
         if (x != 0)
             x--;
@@ -84,7 +99,6 @@ public class FloodFill {
                 marked[p.x][p.y] = true;
 
 
-
                 // queue adjacent pixels for checking
                 if (p.x > 0){
                     queue.add(new Point(p.x-1, p.y));
@@ -104,11 +118,23 @@ public class FloodFill {
         }
     } // end fill area
 
+    /**
+     * gets the colour value from the integer at the x and y positions in the image
+     * @param image
+     * @param x
+     * @param y
+     * @return
+     */
     private Color getColor(BufferedImage image, int x, int y){
         Color c = new Color(image.getRGB(x,y));
         return c;
     }
 
+    /**
+     * sets non marked areas to the fill colour
+     * @param image
+     * @param fill
+     */
     private void fillPiece(BufferedImage image, Color fill){
         for (int i = 0; i < width; i++){ // x loop
             for (int j = 0; j < height; j++){ // y loop
@@ -121,7 +147,7 @@ public class FloodFill {
     }
 
     /**
-     *
+     * sets the areas where piece is false to the fill colour
      * @param image
      * @param fill
      */
@@ -180,9 +206,6 @@ public class FloodFill {
 
         ImageIO.write(newImage, "png", new File("edge.png"));
     }
-
-
-
 
 
 

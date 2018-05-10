@@ -107,18 +107,20 @@ public class Compare {
 
 
         double aNormal = computePoint(aPoint,a);
+        // score of 0 to pieces deemed already bad matches
         if (this.score == 0){
            // System.out.println("removed");
             return 0;
         }
         double bNormal = computePoint(bPoint,b);
+        // score of 0 to pieces deemed already bad matches
         if (this.score == 0){
             //System.out.println("removed");
             return 0;
         }
 
         int[] TOLERANCE = {5,5};
-
+        //int[] TOLERANCE = {5,5};
 
 
 
@@ -284,7 +286,7 @@ public class Compare {
      * @return
      */
     public double findRotation(double aGrad, double bGrad, boolean flip){
-
+        final int HALF_ROTATION = 180;
         double gradRate = bGrad/aGrad;
 
         //tan x = m
@@ -298,32 +300,23 @@ public class Compare {
         aAngle = Math.toDegrees(Math.atan(aGrad));
         bAngle = Math.toDegrees(Math.atan(bGrad));
 
-        /**
-
-        if (aGrad < 0){
-            aAngle = 180 - aAngle;
-        }
-
-        if (bGrad < 0){
-            bAngle = 180 - aAngle;
-        }
-        **/
-
-       // System.out.println("A Gradient = " + aGrad + "A Angle = " +  aAngle);
-       // System.out.println("B Gradient = " + bGrad + "B Angle = " +  bAngle);
+        // Debugging
+        // System.out.println("A Gradient = " + aGrad + "A Angle = " +  aAngle);
+        // System.out.println("B Gradient = " + bGrad + "B Angle = " +  bAngle);
 
 
 
         double degrees = bAngle - aAngle; //  to rotation angle
-        // 180 degrees rotation to "flip" so that pieces are not directly ontop
-        // only required when both
+
+
+        // 180 degrees rotation flip
         if (flip){
-            degrees+=180;
+            degrees+=HALF_ROTATION;
         }
 
        // System.out.println(degrees);
         // convert to radians
-        double radians = degrees * (Math.PI/180);
+        double radians = degrees * (Math.PI/HALF_ROTATION);
 
         return radians;
     }

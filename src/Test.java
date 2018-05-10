@@ -10,10 +10,10 @@ public class Test {
     public Test() throws IOException {
 
 
-        BufferedImage image = ImageIO.read(new File("img011.jpg"));
+        BufferedImage image = ImageIO.read(new File("shapier test.png"));
         boolean[][] points = new FloodFill().floodFill(image, new Point(1, 1), Color.WHITE, Color.RED);
-        ImageIO.write(image, "png", new File("output.png"));
-       // PieceDetection p = new PieceDetection(points, image);
+        ImageIO.write(image, "png", new File("floodfill.png"));
+
         Contours c = new Contours(points);
         ArrayList<Piece> p = c.getPieceList();
 
@@ -35,9 +35,8 @@ public class Test {
         System.out.println("Pieces without noise: " + length);
 
         //c.outEdge(c.edges);
-
+        System.out.println("Comparing pieces, this may take a couple of minutes");
         Compare newCompare = new Compare(p);
-
         //newCompare.compareTwoPieces(p.get(0), p.get(1));
 
 
@@ -47,8 +46,6 @@ public class Test {
        new Test();
        // BufferedImage image = ImageIO.read(new File("real piece.png"));
        // GUI a = new GUI(image);
-
-        //a.create();
 
     }
 }
